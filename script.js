@@ -69,17 +69,19 @@ if (params.has("p1") && params.has("p2")) {
     if (params.get("me") === "1") {
         currentPlayer = "Joueur 1";
         // Joueur 1 fait DEVINER un prénom de son propre lot
-        target = names1[Math.floor(Math.random() * names1.length)];
+        target = allnames[Math.floor(Math.random() * allnames.length)];
+        document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
     } else if (params.get("me") === "2") {
         currentPlayer = "Joueur 2";
         // Joueur 2 fait DEVINER un prénom de son propre lot
-        target = names2[Math.floor(Math.random() * names2.length)];
+        target = allnames[Math.floor(Math.random() * allnames.length)];
+        document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
     } else {
         alert("Lien invalide : ajoutez &me=1 ou &me=2 à l'URL");
         throw new Error("Paramètre me manquant");
     }
 
-    document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
+
 
     // Créer la grille complète
     const grid = document.getElementById("grid");
