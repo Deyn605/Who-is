@@ -4,36 +4,318 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Qui est-ce ?</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* --- GLOBAL --- */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    /* --- INPUTS --- */
+    #inputs, #inputs2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px auto;
+    }
+    input {
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: border 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    /* --- BUTTONS --- */
+    button {
+      padding: 12px 30px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-weight: bold;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    /* --- GRILLE --- */
+    #grid {
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      max-width: 500px;
+    }
+    .card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border: 2px solid #667eea;
+      padding: 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+      color: #333;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .card.removed {
+      background: #e0e0e0;
+      text-decoration: line-through;
+      opacity: 0.5;
+      border-color: #999;
+    }
+    /* --- VIES --- */
+    #hearts {
+      font-size: 2em;
+      margin: 15px 0;
+    }
+    /* --- LIENS --- */
+    .link-box {
+      background: #f5f7fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      word-break: break-all;
+    }
+    a {
+      color: #667eea;
+      font-weight: bold;
+    }
+    /* --- TARGET --- */
+    #targetName {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #ffc107;
+      font-size: 1.2em;
+      color: #856404;
+      margin-bottom: 20px;
+    }
+    #result {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Qui est-ce ? 🎲</h1>
-
-  <!-- Phase joueur 1 -->
-  <div id="setup">
-    <h2>Joueur 1 : Entre 10 prénoms</h2>
-    <div id="inputs"></div>
-    <button id="validate">Valider mes prénoms</button>
-    <p id="shareLink"></p>
+  <div class="container">
+    <h1>🎲 Qui est-ce ?</h1>
+    
+    <!-- Phase joueur 1 -->
+    <div id="setup">
+      <h2>Joueur 1 : Entre 10 prénoms</h2>
+      <div id="inputs"></div>
+      <button id="validate">Valider mes prénoms</button>
+      <div id="shareLink"></div>
+    </div>
+    
+    <!-- Phase joueur 2 -->
+    <div id="addSecond" style="display:none;">
+      <h2>Joueur 2 : Entre tes 10 prénoms</h2>
+      <div id="inputs2"></div>
+      <button id="validate2">Générer les liens</button>
+      <div id="shareLink2"></div>
+    </div>
+    
+    <!-- Jeu -->
+    <div id="game" style="display:none;">
+      <div id="targetName"></div>
+      <div id="hearts">❤️❤️</div>
+      <div id="grid"></div>
+      <button id="guess">Je devine !</button>
+      <div id="result"></div>
+    </div>
   </div>
 
-  <!-- Phase joueur 2 -->
-  <div id="addSecond" style="display:none;">
-    <h2>Joueur 2 : Entre tes 10 prénoms</h2>
-    <div id="inputs2"></div>
-    <button id="validate2">Générer le lien final</button>
-    <p id="shareLink2"></p>
-  </div>
+  <script>
+    // --- PHASE JOUEUR 1 : création des 10 prénoms ---
+    const inputsDiv = document.getElementById("inputs");
+    for (let i = 0; i < 10; i++) {
+      const inp = document.createElement("input");
+      inp.placeholder = "Prénom " + (i + 1);
+      inputsDiv.appendChild(inp);
+    }
 
-  <!-- Jeu -->
-  <div id="game" style="display:none;">
-    <h2 id="targetName">Prénom à faire deviner : </h2>
-    <div id="hearts">❤️❤️</div>
-    <div id="grid"></div>
-    <button id="guess">C'est lui !</button>
-    <p id="result"></p>
-  </div>
+    // 🔧 CHANGE CETTE URL PAR TON LIEN GITHUB PAGES !
+    const GITHUB_URL = "https://TON-USERNAME.github.io/TON-REPO/index.html";
 
-  <script src="script.js"></script>
+    document.getElementById("validate").onclick = () => {
+      const names1 = [...inputsDiv.querySelectorAll("input")]
+        .map(x => x.value.trim())
+        .filter(Boolean);
+      if (names1.length !== 10) return alert("Entre bien 10 prénoms !");
+      
+      const url = GITHUB_URL + "?p1=" + encodeURIComponent(names1.join(","));
+      
+      document.getElementById("shareLink").innerHTML = `
+        <div class="link-box">
+          <p><strong>Envoie ce lien au Joueur 2 :</strong></p>
+          <a href="${url}" target="_blank">${url}</a>
+        </div>
+      `;
+    };
+
+    // --- PHASE JOUEUR 2 : remplir ses 10 prénoms ---
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.has("p1") && !params.has("p2")) {
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("addSecond").style.display = "block";
+
+      const inputsDiv2 = document.getElementById("inputs2");
+      for (let i = 0; i < 10; i++) {
+        const inp = document.createElement("input");
+        inp.placeholder = "Prénom " + (i + 1);
+        inputsDiv2.appendChild(inp);
+      }
+
+      document.getElementById("validate2").onclick = () => {
+        const names2 = [...inputsDiv2.querySelectorAll("input")]
+          .map(x => x.value.trim())
+          .filter(Boolean);
+        if (names2.length !== 10) return alert("Entre bien 10 prénoms !");
+        
+        const names1 = params.get("p1").split(",");
+        const allNames = [...names1, ...names2];
+        
+        // Générer deux prénoms cibles différents
+        const target1 = allNames[Math.floor(Math.random() * allNames.length)];
+        let target2 = allNames[Math.floor(Math.random() * allNames.length)];
+        while (target2 === target1) {
+          target2 = allNames[Math.floor(Math.random() * allNames.length)];
+        }
+        
+        const finalUrl1 = GITHUB_URL + 
+          "?p1=" + encodeURIComponent(names1.join(",")) +
+          "&p2=" + encodeURIComponent(names2.join(",")) +
+          "&t1=" + encodeURIComponent(target1) +
+          "&t2=" + encodeURIComponent(target2) +
+          "&me=1";
+        const finalUrl2 = GITHUB_URL + 
+          "?p1=" + encodeURIComponent(names1.join(",")) +
+          "&p2=" + encodeURIComponent(names2.join(",")) +
+          "&t1=" + encodeURIComponent(target1) +
+          "&t2=" + encodeURIComponent(target2) +
+          "&me=2";
+        
+        document.getElementById("addSecond").innerHTML = `
+          <h2>✅ Liens générés !</h2>
+          <div class="link-box">
+            <p><strong>Lien pour Joueur 1 :</strong></p>
+            <a href="${finalUrl1}" target="_blank">${finalUrl1}</a>
+          </div>
+          <div class="link-box">
+            <p><strong>Lien pour Joueur 2 :</strong></p>
+            <a href="${finalUrl2}" target="_blank">${finalUrl2}</a>
+          </div>
+          <p style="margin-top: 20px;">Chacun ouvre son lien pour commencer le jeu ! 🎮</p>
+        `;
+      };
+    }
+
+    // --- PHASE JEU ---
+    if (params.has("p1") && params.has("p2") && params.has("t1") && params.has("t2")) {
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("addSecond").style.display = "none";
+      document.getElementById("game").style.display = "block";
+
+      const names1 = params.get("p1").split(",");
+      const names2 = params.get("p2").split(",");
+      const allNames = [...names1, ...names2];
+      
+      const target1 = params.get("t1");
+      const target2 = params.get("t2");
+      
+      let myTarget, targetToGuess, playerName;
+
+      if (params.get("me") === "1") {
+        playerName = "Joueur 1";
+        myTarget = target1; // prénom que J1 doit faire deviner
+        targetToGuess = target2; // prénom que J1 doit deviner
+      } else if (params.get("me") === "2") {
+        playerName = "Joueur 2";
+        myTarget = target2; // prénom que J2 doit faire deviner
+        targetToGuess = target1; // prénom que J2 doit deviner
+      } else {
+        alert("Lien invalide !");
+        throw new Error("Paramètre me manquant");
+      }
+
+      // Afficher le prénom que le joueur doit faire deviner
+      document.getElementById("targetName").innerText = 
+        `Tu es ${playerName} - Prénom à faire deviner à l'autre : ${myTarget}`;
+
+      // Créer la grille complète
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      allNames.forEach(name => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerText = name;
+        card.onclick = () => card.classList.toggle("removed");
+        grid.appendChild(card);
+      });
+
+      // Vies
+      let lives = 2;
+      const heartsDiv = document.getElementById("hearts");
+
+      document.getElementById("guess").onclick = () => {
+        const guess = prompt("Entre le prénom que tu devines :");
+        if (!guess) return;
+        
+        if (guess.trim() === targetToGuess) {
+          document.getElementById("result").innerText = "🎉 Bravo ! Tu as trouvé le prénom !";
+          document.getElementById("guess").disabled = true;
+          document.getElementById("guess").style.opacity = "0.5";
+        } else {
+          lives--;
+          if (lives > 0) {
+            heartsDiv.innerText = "❤️";
+            alert("Mauvais choix ! Il te reste 1 vie.");
+          } else {
+            heartsDiv.innerText = "💔";
+            document.getElementById("result").innerText = 
+              `❌ Perdu ! C'était : ${targetToGuess}`;
+            document.getElementById("guess").disabled = true;
+            document.getElementById("guess").style.opacity = "0.5";
+          }
+        }
+      };
+    }
+  </script>
 </body>
 </html>
