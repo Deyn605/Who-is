@@ -18,14 +18,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 15px;
     }
     
     .container {
       background: white;
       max-width: 650px;
       width: 100%;
-      padding: 40px;
+      padding: 30px 20px;
       border-radius: 25px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
@@ -33,7 +33,7 @@
     h1 {
       text-align: center;
       color: #667eea;
-      font-size: 2.5em;
+      font-size: 2em;
       margin-bottom: 10px;
     }
     
@@ -41,13 +41,13 @@
       text-align: center;
       color: #333;
       margin-bottom: 25px;
-      font-size: 1.5em;
+      font-size: 1.3em;
     }
     
     .inputs-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 10px;
       margin-bottom: 25px;
     }
     
@@ -57,6 +57,7 @@
       border-radius: 12px;
       font-size: 1em;
       transition: all 0.3s;
+      width: 100%;
     }
     
     input:focus {
@@ -105,42 +106,64 @@
       margin-bottom: 10px;
       font-weight: bold;
       color: #333;
+      text-align: center;
     }
     
-    .link-box a {
+    .link-text {
       color: #667eea;
       word-break: break-all;
-      text-decoration: none;
-      font-size: 0.9em;
+      font-size: 0.85em;
+      display: block;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      text-align: center;
     }
     
-    .link-box a:hover {
-      text-decoration: underline;
+    .copy-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      padding: 12px;
+      font-size: 1em;
+      margin-top: 0;
+    }
+    
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .copy-btn.copied {
+      background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
     }
     
     #grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
       margin: 25px 0;
     }
     
     .card {
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       border: 3px solid #667eea;
-      padding: 18px;
+      padding: 15px;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s;
       font-weight: bold;
       color: #333;
       text-align: center;
-      font-size: 0.95em;
+      font-size: 0.9em;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
     }
     
     .card.removed {
@@ -153,12 +176,12 @@
     
     #targetName {
       background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-      padding: 20px;
+      padding: 15px;
       border-radius: 12px;
       border: 3px solid #ffc107;
       color: #856404;
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 1em;
       margin-bottom: 20px;
       text-align: center;
     }
@@ -171,7 +194,7 @@
     
     #result {
       text-align: center;
-      font-size: 1.4em;
+      font-size: 1.2em;
       font-weight: bold;
       margin-top: 20px;
       padding: 15px;
@@ -186,7 +209,57 @@
       text-align: center;
       color: #666;
       margin-top: 15px;
-      font-size: 0.95em;
+      font-size: 0.9em;
+    }
+    
+    /* Responsive pour tablettes */
+    @media (min-width: 600px) {
+      .container {
+        padding: 40px;
+      }
+      
+      h1 {
+        font-size: 2.5em;
+      }
+      
+      h2 {
+        font-size: 1.5em;
+      }
+      
+      .inputs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      
+      #grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      
+      .card {
+        font-size: 0.95em;
+        padding: 18px;
+      }
+      
+      .link-text {
+        font-size: 0.9em;
+      }
+      
+      #targetName {
+        font-size: 1.1em;
+        padding: 20px;
+      }
+      
+      #result {
+        font-size: 1.4em;
+      }
+    }
+    
+    /* Responsive pour grands écrans */
+    @media (min-width: 900px) {
+      #grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
     }
   </style>
 </head>
@@ -224,6 +297,22 @@
     // URL de base du jeu sur GitHub Pages
     const BASE_URL = "https://Deyn605.github.io/Who-is/index.html";
     
+    // Fonction pour copier un lien
+    function copyToClipboard(text, buttonElement) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = buttonElement.textContent;
+        buttonElement.textContent = '✅ Copié !';
+        buttonElement.classList.add('copied');
+        
+        setTimeout(() => {
+          buttonElement.textContent = originalText;
+          buttonElement.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        alert('Erreur lors de la copie. Copie le lien manuellement.');
+      });
+    }
+    
     // Récupérer les paramètres de l'URL
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -259,7 +348,8 @@
       document.getElementById('linkBox1').innerHTML = `
         <div class="link-box">
           <p>✅ Parfait ! Envoie ce lien au Joueur 2 :</p>
-          <a href="${linkForPlayer2}" target="_blank">${linkForPlayer2}</a>
+          <div class="link-text">${linkForPlayer2}</div>
+          <button class="copy-btn" onclick="copyToClipboard('${linkForPlayer2.replace(/'/g, "\\'")}', this)">📋 Copier le lien</button>
           <p class="info-text">Le Joueur 2 devra entrer ses 10 prénoms</p>
         </div>
       `;
@@ -314,11 +404,13 @@
         document.getElementById('linkBox2').innerHTML = `
           <div class="link-box">
             <p>🎮 Lien pour le Joueur 1 :</p>
-            <a href="${linkPlayer1}" target="_blank">${linkPlayer1}</a>
+            <div class="link-text">${linkPlayer1}</div>
+            <button class="copy-btn" onclick="copyToClipboard('${linkPlayer1.replace(/'/g, "\\'")}', this)">📋 Copier lien Joueur 1</button>
           </div>
           <div class="link-box">
             <p>🎮 Lien pour le Joueur 2 :</p>
-            <a href="${linkPlayer2}" target="_blank">${linkPlayer2}</a>
+            <div class="link-text">${linkPlayer2}</div>
+            <button class="copy-btn" onclick="copyToClipboard('${linkPlayer2.replace(/'/g, "\\'")}', this)">📋 Copier lien Joueur 2</button>
           </div>
           <p class="info-text">Chaque joueur ouvre son lien pour commencer la partie !</p>
         `;
