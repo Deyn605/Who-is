@@ -68,10 +68,12 @@ if (params.has("p1") && params.has("p2")) {
 
     if (params.get("me") === "1") {
         currentPlayer = "Joueur 1";
-        target = names2[Math.floor(Math.random() * names2.length)];
+        // Joueur 1 fait DEVINER un prénom de son propre lot
+        target = names1[Math.floor(Math.random() * names1.length)];
     } else if (params.get("me") === "2") {
         currentPlayer = "Joueur 2";
-        target = names1[Math.floor(Math.random() * names1.length)];
+        // Joueur 2 fait DEVINER un prénom de son propre lot
+        target = names2[Math.floor(Math.random() * names2.length)];
     } else {
         alert("Lien invalide : ajoutez &me=1 ou &me=2 à l'URL");
         throw new Error("Paramètre me manquant");
@@ -103,7 +105,7 @@ if (params.has("p1") && params.has("p2")) {
         } else {
             lives--;
             if (lives > 0) {
-                heartsDiv.innerText = "❤️🧡";
+                heartsDiv.innerText = "❤️";
                 alert("Mauvais choix ! Il te reste 1 vie.");
             } else {
                 heartsDiv.innerText = "💔";
