@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qui est-ce ?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Qui est-ce ? 🎲</h1>
+
+  <div id="setup">
+    <h2>Entre 10 prénoms</h2>
+    <div id="inputs"></div>
+    <button id="validate">Valider mes prénoms</button>
+    <p id="shareLink"></p>
+  </div>
+
+  <div id="addSecond" style="display:none;">
+    <h2>Ajoute tes 10 prénoms</h2>
+    <div id="inputs2"></div>
+    <button id="validate2">Valider</button>
+  </div>
+
+  <div id="game" style="display:none;">
+    <h2 id="turn">C'est le tour de : </h2>
+    <div id="hearts">❤️❤️</div>
+    <div id="grid"></div>
+    <button id="guess">C'est lui !</button>
+    <p id="result"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
