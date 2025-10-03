@@ -9,19 +9,23 @@
 <body>
   <h1>Qui est-ce ? 🎲</h1>
 
+  <!-- Phase joueur 1 -->
   <div id="setup">
-    <h2>Entre 10 prénoms</h2>
+    <h2>Joueur 1 : Entre 10 prénoms</h2>
     <div id="inputs"></div>
     <button id="validate">Valider mes prénoms</button>
     <p id="shareLink"></p>
   </div>
 
+  <!-- Phase joueur 2 -->
   <div id="addSecond" style="display:none;">
-    <h2>Ajoute tes 10 prénoms</h2>
+    <h2>Joueur 2 : Entre tes 10 prénoms</h2>
     <div id="inputs2"></div>
-    <button id="validate2">Valider</button>
+    <button id="validate2">Générer le lien final</button>
+    <p id="shareLink2"></p>
   </div>
 
+  <!-- Jeu -->
   <div id="game" style="display:none;">
     <h2 id="targetName">Prénom à faire deviner : </h2>
     <div id="hearts">❤️❤️</div>
