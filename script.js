@@ -9,19 +9,24 @@ for (let i = 0; i < 10; i++) {
 // Valider joueur 1
 document.getElementById("validate").onclick = () => {
   const names = [...inputsDiv.querySelectorAll("input")].map(x => x.value.trim()).filter(Boolean);
-  if (names.length < 10) {
-    alert("Mets bien 10 prénoms !");
-    return;
-  }
-  // Créer un lien pour joueur 2
+  if (names.length !== 10) return alert("Mets bien 10 prénoms !");
+
+  // Afficher le lien pour joueur 2
   const url = window.location.origin + window.location.pathname + "?p1=" + encodeURIComponent(names.join(","));
-  document.getElementById("shareLink").innerHTML = "Envoie ce lien à ton ami :<br><a href='" + url + "'>" + url + "</a>";
+  document.getElementById("shareLink").innerHTML = `
+    Envoie ce lien à ton ami :<br><a href="${url}">${url}</a><br><br>
+    <button id="startSolo">Lancer le jeu maintenant</button>
+  `;
+
+  // Joueur 1 peut lancer le jeu seul
+  document.getElementById("startSolo").onclick = () => {
+    startGame(names, "Joueur 1");
+  };
 };
 
-// Vérifier si l’URL contient les prénoms joueur 1
+// Si URL contient les prénoms joueur 1 (pour joueur 2)
 const params = new URLSearchParams(window.location.search);
 if (params.has("p1")) {
-  // Masquer le setup initial pour le joueur 2
   document.getElementById("setup").style.display = "none";
   document.getElementById("addSecond").style.display = "block";
 
@@ -32,32 +37,31 @@ if (params.has("p1")) {
     inputsDiv2.appendChild(inp);
   }
 
-  // Valider joueur 2 et lancer le jeu
   document.getElementById("validate2").onclick = () => {
     const names2 = [...inputsDiv2.querySelectorAll("input")].map(x => x.value.trim()).filter(Boolean);
-    if (names2.length < 10) {
-      alert("Mets bien 10 prénoms !");
-      return;
-    }
+    if (names2.length !== 10) return alert("Mets bien 10 prénoms !");
+    
     const names1 = params.get("p1").split(",");
-    startGame([...names1, ...names2]);
+    startGame([...names1, ...names2], "Joueur 2");
   };
 }
 
-// Lancer le jeu
-function startGame(allNames) {
+// Fonction pour lancer le jeu
+function startGame(allNames, currentPlayer) {
+  document.getElementById("setup").style.display = "none";
   document.getElementById("addSecond").style.display = "none";
   document.getElementById("game").style.display = "block";
 
-  // Tirer une cible aléatoire pour le joueur actuel (joueur 2)
+  // Mélanger les prénoms
   const shuffled = allNames.sort(() => Math.random() - 0.5);
-  const playerTarget = shuffled[Math.floor(Math.random() * shuffled.length)];
 
-  // Afficher le prénom à faire deviner
-  document.getElementById("targetName").innerText = "Prénom à faire deviner : " + playerTarget;
+  // Choisir un prénom à deviner
+  const target = shuffled[Math.floor(Math.random() * shuffled.length)];
+  document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
 
   // Créer la grille
   const grid = document.getElementById("grid");
+  grid.innerHTML = "";
   shuffled.forEach(name => {
     const card = document.createElement("div");
     card.className = "card";
@@ -73,7 +77,7 @@ function startGame(allNames) {
   document.getElementById("guess").onclick = () => {
     const guess = prompt("Entre le prénom que tu devines :");
     if (!guess) return;
-    if (guess === playerTarget) {
+    if (guess === target) {
       document.getElementById("result").innerText = "🎉 Bravo ! Bonne réponse.";
       heartsDiv.innerText = "❤️❤️";
     } else {
