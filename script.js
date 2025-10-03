@@ -54,7 +54,7 @@ if (params.has("p1") && !params.has("p2")) {
     };
 }
 
-// --- PHASE JEU : lien final avec p1 et p2 ---
+// --- PHASE JEU ---
 if (params.has("p1") && params.has("p2")) {
     document.getElementById("setup").style.display = "none";
     document.getElementById("addSecond").style.display = "none";
@@ -62,26 +62,26 @@ if (params.has("p1") && params.has("p2")) {
 
     const names1 = params.get("p1").split(",");
     const names2 = params.get("p2").split(",");
-    const allNames = [...names1, ...names2];
+    const allNames = [...names1, ...names2]; // Les 20 prénoms pour chaque joueur
 
-    let currentPlayer, target;
+    let currentPlayer, myTarget, otherTarget;
 
     if (params.get("me") === "1") {
         currentPlayer = "Joueur 1";
-        // Joueur 1 fait DEVINER un prénom de son propre lot
-        target = allnames[Math.floor(Math.random() * allnames.length)];
-        document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
+        myTarget = allNames[Math.floor(Math.random() * allNames.length)]; // le prénom que Joueur 1 doit faire deviner
+        otherTarget = allNames[Math.floor(Math.random() * allNames.length)]; // le prénom que Joueur 1 doit deviner (optionnel si tu veux)
     } else if (params.get("me") === "2") {
         currentPlayer = "Joueur 2";
-        // Joueur 2 fait DEVINER un prénom de son propre lot
-        target = allnames[Math.floor(Math.random() * allnames.length)];
-        document.getElementById("targetName").innerText = `${currentPlayer} : Prénom à faire deviner : ${target}`;
+        myTarget = allNames[Math.floor(Math.random() * allNames.length)];
+        otherTarget = allNames[Math.floor(Math.random() * allNames.length)];
     } else {
         alert("Lien invalide : ajoutez &me=1 ou &me=2 à l'URL");
         throw new Error("Paramètre me manquant");
     }
 
-
+    // Afficher le prénom que le joueur doit faire deviner à l’autre
+    document.getElementById("targetName").innerText =
+        `${currentPlayer} : Prénom à faire deviner : ${myTarget}`;
 
     // Créer la grille complète
     const grid = document.getElementById("grid");
@@ -101,8 +101,8 @@ if (params.has("p1") && params.has("p2")) {
     document.getElementById("guess").onclick = () => {
         const guess = prompt("Entre le prénom que tu devines :");
         if (!guess) return;
-        if (guess === target) {
-            document.getElementById("result").innerText = "🎉 Bravo ! Bonne réponse.";
+        if (guess === myTarget) { // succès uniquement si on devine le prénom que l’autre joueur doit deviner
+            document.getElementById("result").innerText = "🎉 Bravo ! Vous avez trouvé le prénom !";
             heartsDiv.innerText = "❤️❤️";
         } else {
             lives--;
