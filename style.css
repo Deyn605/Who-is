@@ -1,53 +1,73 @@
+/* --- GLOBAL --- */
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  padding: 10px;
+  padding: 20px;
   background: #f2f2f2;
+  margin: 0;
 }
 
 h1 {
-  font-size: 1.8em;
+  font-size: 2em;
+  margin-bottom: 20px;
 }
 
+h2 {
+  margin-bottom: 15px;
+}
+
+/* --- INPUTS --- */
 #inputs, #inputs2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 5px;
-  max-width: 200px;
-  margin: 0 auto;
+  gap: 8px;
+  max-width: 220px;
+  margin: 0 auto 15px auto;
 }
 
 input {
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  font-size: 1em;
 }
 
+/* --- BUTTONS --- */
 button {
+  padding: 10px 20px;
   margin-top: 10px;
-  padding: 10px 15px;
   border: none;
   border-radius: 10px;
-  background: #0077ff;
+  background-color: #0077ff;
   color: white;
   font-size: 1em;
   cursor: pointer;
 }
 
+button:hover {
+  background-color: #005fcc;
+}
+
+/* --- GRILLE --- */
 #grid {
-  margin: 15px auto;
+  margin: 20px auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 10px;
   max-width: 400px;
 }
 
 .card {
   background: white;
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 12px;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
 }
 
 .card.removed {
@@ -55,7 +75,18 @@ button {
   text-decoration: line-through;
 }
 
+/* --- VIES --- */
 #hearts {
   font-size: 1.5em;
-  margin: 10px;
+  margin: 10px 0;
+}
+
+/* --- LIENS --- */
+a {
+  color: #0077ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
